@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="https://openhab.org/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/config-description/v1.0.0
+		https://openhab.org/schemas/config-description-1.0.0.xsd">
+
+	<config-description uri="thing-type:smhi:forecast">
+		<parameter name="latitude" type="decimal" step="0.000001" required="true">
+			<label>Latitude</label>
+			<description>Latitude for the forecast</description>
+		</parameter>
+		<parameter name="longitude" type="decimal" step="0.000001" required="true">
+			<label>Longitude</label>
+			<description>Longitude for the forecast</description>
+		</parameter>
+		<parameter name="hourlyForecasts" type="integer" multiple="true">
+			<label>Hourly Forecasts</label>
+			<description>The hourly forecasts to display</description>
+			<limitToOptions>true</limitToOptions>
+			<options>
+				<option value="0">@text/thing-type.smhi.forecast.group.hour_0.label</option>
+				<option value="1">@text/thing-type.smhi.forecast.group.hour_1.label</option>
+				<option value="2">@text/thing-type.smhi.forecast.group.hour_2.label</option>
+				<option value="3">@text/thing-type.smhi.forecast.group.hour_3.label</option>
+				<option value="4">@text/thing-type.smhi.forecast.group.hour_4.label</option>
+				<option value="5">@text/thing-type.smhi.forecast.group.hour_5.label</option>
+				<option value="6">@text/thing-type.smhi.forecast.group.hour_6.label</option>
+				<option value="7">@text/thing-type.smhi.forecast.group.hour_7.label</option>
+				<option value="8">@text/thing-type.smhi.forecast.group.hour_8.label</option>
+				<option value="9">@text/thing-type.smhi.forecast.group.hour_9.label</option>
+				<option value="10">@text/thing-type.smhi.forecast.group.hour_10.label</option>
+				<option value="11">@text/thing-type.smhi.forecast.group.hour_11.label</option>
+				<option value="12">@text/thing-type.smhi.forecast.group.hour_12.label</option>
+				<option value="13">@text/thing-type.smhi.forecast.group.hour_13.label</option>
+				<option value="14">@text/thing-type.smhi.forecast.group.hour_14.label</option>
+				<option value="15">@text/thing-type.smhi.forecast.group.hour_15.label</option>
+				<option value="16">@text/thing-type.smhi.forecast.group.hour_16.label</option>
+				<option value="17">@text/thing-type.smhi.forecast.group.hour_17.label</option>
+				<option value="18">@text/thing-type.smhi.forecast.group.hour_18.label</option>
+				<option value="19">@text/thing-type.smhi.forecast.group.hour_19.label</option>
+				<option value="20">@text/thing-type.smhi.forecast.group.hour_20.label</option>
+				<option value="21">@text/thing-type.smhi.forecast.group.hour_21.label</option>
+				<option value="22">@text/thing-type.smhi.forecast.group.hour_22.label</option>
+				<option value="23">@text/thing-type.smhi.forecast.group.hour_23.label</option>
+				<option value="24">@text/thing-type.smhi.forecast.group.hour_24.label</option>
+			</options>
+		</parameter>
+		<parameter name="dailyForecasts" type="integer" multiple="true">
+			<label>Daily Forecasts</label>
+			<description>The daily forecasts to display</description>
+			<limitToOptions>true</limitToOptions>
+			<options>
+				<option value="0">@text/thing-type.smhi.forecast.group.day_0.label</option>
+				<option value="1">@text/thing-type.smhi.forecast.group.day_1.label</option>
+				<option value="2">@text/thing-type.smhi.forecast.group.day_2.label</option>
+				<option value="3">@text/thing-type.smhi.forecast.group.day_3.label</option>
+				<option value="4">@text/thing-type.smhi.forecast.group.day_4.label</option>
+				<option value="5">@text/thing-type.smhi.forecast.group.day_5.label</option>
+				<option value="6">@text/thing-type.smhi.forecast.group.day_6.label</option>
+				<option value="7">@text/thing-type.smhi.forecast.group.day_7.label</option>
+				<option value="8">@text/thing-type.smhi.forecast.group.day_8.label</option>
+				<option value="9">@text/thing-type.smhi.forecast.group.day_9.label</option>
+			</options>
+		</parameter>
+	</config-description>
+
+</config-description:config-descriptions>

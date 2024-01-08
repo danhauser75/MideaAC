@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="boschshc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+	<!-- Bosch Bridge -->
+	<bridge-type id="shc">
+		<label>Smart Home Controller</label>
+		<description>The Bosch Smart Home Bridge representing the Bosch Smart Home Controller.</description>
+
+		<channels>
+			<channel id="scenario-triggered" typeId="scenario-triggered"/>
+			<channel id="trigger-scenario" typeId="trigger-scenario"/>
+		</channels>
+
+		<properties>
+			<property name="thingTypeVersion">1</property>
+		</properties>
+
+		<config-description-ref uri="thing-type:boschshc:bridge"/>
+	</bridge-type>
+
+	<!-- Things -->
+
+	<thing-type id="in-wall-switch">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>In-wall Switch</label>
+		<description>A simple light control.</description>
+
+		<channels>
+			<channel id="power-switch" typeId="system.power"/>
+			<channel id="power-consumption" typeId="power-consumption"/>
+			<channel id="energy-consumption" typeId="energy-consumption"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="smart-plug-compact">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Compact Smart Plug</label>
+		<description>A compact smart plug with energy monitoring capabilities.</description>
+
+		<channels>
+			<channel id="power-switch" typeId="system.power"/>
+			<channel id="power-consumption" typeId="power-consumption"/>
+			<channel id="energy-consumption" typeId="energy-consumption"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="twinguard">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Twinguard</label>
+		<description>The Twinguard smoke detector warns you in case of fire and constantly monitors the air.</description>
+
+		<channels>
+			<channel id="temperature" typeId="temperature"/>
+			<channel id="temperature-rating" typeId="temperature-rating"/>
+			<channel id="humidity" typeId="humidity"/>
+			<channel id="humidity-rating" typeId="humidity-rating"/>
+			<channel id="purity" typeId="purity"/>
+			<channel id="air-description" typeId="air-description"/>
+			<channel id="purity-rating" typeId="purity-rating"/>
+			<channel id="combined-rating" typeId="combined-rating"/>
+			<channel id="battery-level" typeId="system.battery-level"/>
+			<channel id="low-battery" typeId="system.low-battery"/>
+			<channel id="smoke-check" typeId="smoke-check"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="window-contact">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Door/Window Contact</label>
+		<description>Detects open windows and doors.</description>
+
+		<channels>
+			<channel id="contact" typeId="contact"/>
+			<channel id="battery-level" typeId="system.battery-level"/>
+			<channel id="low-battery" typeId="system.low-battery"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="motion-detector">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Motion Detector</label>
+		<description>Detects every movement through an intelligent combination of passive infra-red technology and an
+			additional temperature sensor.</description>
+
+		<channels>
+			<channel id="latest-motion" typeId="latest-motion"/>
+			<channel id="battery-level" typeId="system.battery-level"/>
+			<channel id="low-battery" typeId="system.low-battery"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="shutter-control">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Shutter Control</label>
+		<description>Control of your shutter to take any position you desire.</description>
+
+		<channels>
+			<channel id="level" typeId="level"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="thermostat">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Thermostat</label>
+		<description>Radiator thermostat</description>
+
+		<channels>
+			<channel id="temperature" typeId="temperature"/>
+			<channel id="valve-tappet-position" typeId="valve-tappet-position"/>
+			<channel id="child-lock" typeId="child-lock"/>
+			<channel id="silent-mode" typeId="silent-mode"/>
+			<channel id="battery-level" typeId="system.battery-level"/>
+			<channel id="low-battery" typeId="system.low-battery"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="climate-control">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Climate Control</label>
+		<description>This is a virtual device which is automatically created for all rooms that have
+			thermostats in it.</description>
+
+		<channels>
+			<channel id="temperature" typeId="temperature"/>
+			<channel id="setpoint-temperature" typeId="setpoint-temperature"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="wall-thermostat">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Wall Thermostat</label>
+		<description>Display of the current room temperature as well as the relative humidity in the room.</description>
+
+		<channels>
+			<channel id="temperature" typeId="temperature"/>
+			<channel id="humidity" typeId="humidity"/>
+			<channel id="battery-level" typeId="system.battery-level"/>
+			<channel id="low-battery" typeId="system.low-battery"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="security-camera-360">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Security Camera 360</label>
+		<description>Indoor security camera with 360° view and motion detection.</description>
+
+		<channels>
+			<channel id="privacy-mode" typeId="privacy-mode"/>
+			<channel id="camera-notification" typeId="camera-notification"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="security-camera-eyes">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Security Camera Eyes</label>
+		<description>Outdoor security camera with motion detection and light.</description>
+
+		<channels>
+			<channel id="privacy-mode" typeId="privacy-mode"/>
+			<channel id="camera-notification" typeId="camera-notification"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="intrusion-detection-system">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Intrusion Detection System</label>
+		<description>Allows to retrieve and control the state of the intrusion detection alarm system.</description>
+
+		<channels>
+			<channel id="system-availability" typeId="system-availability"/>
+			<channel id="arming-state" typeId="arming-state"/>
+			<channel id="alarm-state" typeId="alarm-state"/>
+			<channel id="active-configuration-profile" typeId="active-configuration-profile"/>
+			<channel id="arm-action" typeId="arm-action"/>
+			<channel id="disarm-action" typeId="disarm-action"/>
+			<channel id="mute-action" typeId="mute-action"/>
+		</channels>
+
+	</thing-type>
+
+	<thing-type id="smart-bulb">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Smart Bulb</label>
+		<description>A smart bulb connected via Zigbee.</description>
+
+		<channels>
+			<channel id="power-switch" typeId="system.power"/>
+			<channel id="brightness" typeId="system.brightness"/>
+			<channel id="color" typeId="system.color"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+
+	</thing-type>
+
+	<thing-type id="smoke-detector">
+		<supported-bridge-type-refs>
+			<bridge-type-ref id="shc"/>
+		</supported-bridge-type-refs>
+
+		<label>Smoke Detector</label>
+		<description>The smoke detector warns you in case of fire.</description>
+
+		<channels>
+			<channel id="smoke-check" typeId="smoke-check"/>
+			<channel id="battery-level" typeId="system.battery-level"/>
+			<channel id="low-battery" typeId="system.low-battery"/>
+		</channels>
+
+		<config-description-ref uri="thing-type:boschshc:device"/>
+	</thing-type>
+
+	<!-- Channels -->
+
+	<channel-type id="system-availability">
+		<item-type>Switch</item-type>
+		<label>System Availability</label>
+		<description>Indicates whether the intrusion detection system is available.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="arming-state">
+		<item-type>String</item-type>
+		<label>Arming State</label>
+		<description>The arming state of the intrusion detection system. Possible values are SYSTEM_ARMING, SYSTEM_ARMED and
+			SYSTEM_DISARMED. This channel is read-only. Use the arm-action and disarm-action channels to arm and disarm the
+			system.</description>
+		<state readOnly="true">
+			<options>
+				<option value="SYSTEM_ARMING">System is currently arming</option>
+				<option value="SYSTEM_ARMED">System is armed</option>
+				<option value="SYSTEM_DISARMED">System is disarmed</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="alarm-state">
+		<item-type>String</item-type>
+		<label>Alarm State</label>
+		<description>The alarm state of the intrusion detection system. Possible values are ALARM_OFF, PRE_ALARM, ALARM_ON,
+			ALARM_MUTED and UNKNOWN.</description>
+		<state readOnly="true">
+			<options>
+				<option value="ALARM_OFF">No alarm</option>
+				<option value="PRE_ALARM">Alarm is about to go off</option>
+				<option value="ALARM_ON">Alarm was triggered</option>
+				<option value="ALARM_MUTED">Alarm is muted</option>
+				<option value="UNKNOWN">Alarm status is unknown</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="active-configuration-profile">
+		<item-type>String</item-type>
+		<label>Active Configuration Profile</label>
+		<description>The name of the active configuration profile used for the intrusion detection system.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="arm-action">
+		<item-type>String</item-type>
+		<label>Arm Action</label>
+		<description>Arms the intrusion detection system using the given profile ID.</description>
+	</channel-type>
+
+	<channel-type id="disarm-action">
+		<item-type>Switch</item-type>
+		<label>Disarm Action</label>
+		<description>Disarms the intrusion detection system when an ON command is received.</description>
+	</channel-type>
+
+	<channel-type id="mute-action">
+		<item-type>Switch</item-type>
+		<label>Mute Action</label>
+		<description>Mutes the alarm when an ON command is received.</description>
+	</channel-type>
+
+	<channel-type id="privacy-mode">
+		<item-type>Switch</item-type>
+		<label>Privacy Mode</label>
+		<description>If privacy mode is enabled, the camera is disabled and vice versa.</description>
+		<state>
+			<options>
+				<option value="ENABLED">Privacy mode enabled (camera disabled)</option>
+				<option value="DISABLED">Privacy mode disabled (camera enabled)</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="camera-notification">
+		<item-type>Switch</item-type>
+		<label>Camera Notifications</label>
+		<description>Enables or disables notifications for the camera.</description>
+		<state>
+			<options>
+				<option value="ENABLED">Enable notifications</option>
+				<option value="DISABLED">Disable notifications</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="temperature">
+		<item-type>Number:Temperature</item-type>
+		<label>Temperature</label>
+		<description>Current measured temperature.</description>
+		<state min="0" max="40" step="0.5" pattern="%.1f %unit%" readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="temperature-rating">
+		<item-type>String</item-type>
+		<label>Temperature Rating</label>
+		<description>Rating of the currently measured temperature.</description>
+		<state readOnly="true">
+			<options>
+				<option value="GOOD">Good Temperature</option>
+				<option value="MEDIUM">Medium Temperature</option>
+				<option value="BAD">Bad Temperature</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="humidity">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Humidity</label>
+		<description>Current measured humidity.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="humidity-rating">
+		<item-type>String</item-type>
+		<label>Humidity Rating</label>
+		<description>Rating of current measured humidity.</description>
+		<state readOnly="true">
+			<options>
+				<option value="GOOD">Good Humidity</option>
+				<option value="MEDIUM">Medium Humidity</option>
+				<option value="BAD">Bad Humidity</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="energy-consumption">
+		<item-type>Number:Energy</item-type>
+		<label>Energy consumption (Wh)</label>
+		<description>Energy consumption of the device.</description>
+		<state pattern="%.1f %unit%" readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="power-consumption">
+		<item-type>Number:Power</item-type>
+		<label>Power consumption (W)</label>
+		<description>Current power consumption of the device.</description>
+		<state pattern="%.1f %unit%" readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="purity">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Purity</label>
+		<description>Purity of the air. A higher value indicates a higher pollution.</description>
+		<state min="500" max="5500" pattern="%.1f ppm" readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="air-description">
+		<item-type>String</item-type>
+		<label>Description</label>
+		<description>Overall description of the air quality.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="purity-rating">
+		<item-type>String</item-type>
+		<label>Purity Rating</label>
+		<description>Rating of the air purity.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="combined-rating">
+		<item-type>String</item-type>
+		<label>Combined Rating</label>
+		<description>Combined rating of the air quality.</description>
+		<state readOnly="true">
+			<options>
+				<option value="GOOD">Good Quality</option>
+				<option value="MEDIUM">Medium Quality</option>
+				<option value="BAD">Bad Quality</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="smoke-check">
+		<item-type>String</item-type>
+		<label>Smoke Check State</label>
+		<description>State of last smoke detector check.</description>
+		<state readOnly="false">
+			<options>
+				<option value="NONE">None</option>
+				<option value="SMOKE_TEST_REQUESTED">Test requested</option>
+				<option value="SMOKE_TEST_OK">Test successful</option>
+				<option value="SMOKE_TEST_FAILED">Test failed</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="contact">
+		<item-type>Contact</item-type>
+		<label>Window/Door contact</label>
+		<description>A window and door contact.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="latest-motion">
+		<item-type>DateTime</item-type>
+		<label>Latest motion</label>
+		<description>Timestamp of the latest motion.</description>
+		<state readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="level">
+		<item-type>Rollershutter</item-type>
+		<label>Level</label>
+		<description>Current open ratio (0 to 100).</description>
+		<state min="0" max="100" step="0.5" readOnly="false"/>
+	</channel-type>
+
+	<channel-type id="valve-tappet-position">
+		<item-type>Number:Dimensionless</item-type>
+		<label>Valve Tappet Position</label>
+		<description>Current open ratio (0 to 100).</description>
+		<state min="0" max="100" step="1" readOnly="true"/>
+	</channel-type>
+
+	<channel-type id="setpoint-temperature">
+		<item-type>Number:Temperature</item-type>
+		<label>Setpoint Temperature</label>
+		<description>Desired temperature.</description>
+		<state min="5" max="30" step="0.5" pattern="%.1f %unit%" readOnly="false"/>
+	</channel-type>
+
+	<channel-type id="child-lock">
+		<item-type>Switch</item-type>
+		<label>Child Lock</label>
+		<description>Enables or disables the child lock on the device.</description>
+	</channel-type>
+
+	<channel-type id="silent-mode">
+		<item-type>Switch</item-type>
+		<label>Silent Mode</label>
+		<description>Enables or disables silent mode on thermostats. When enabled, the battery usage is higher.</description>
+		<state>
+			<options>
+				<option value="MODE_NORMAL">Silent mode disabled (lower battery usage)</option>
+				<option value="MODE_SILENT">Silent mode enabled (higher battery usage)</option>
+			</options>
+		</state>
+	</channel-type>
+
+	<channel-type id="scenario-triggered">
+		<item-type>String</item-type>
+		<label>Scenario Triggered</label>
+		<description>Name of the triggered scenario</description>
+		<state readOnly="true"/>
+	</channel-type>
+	<channel-type id="trigger-scenario">
+		<item-type>String</item-type>
+		<label>Trigger Scenario</label>
+		<description>Name of the scenario to trigger</description>
+	</channel-type>
+
+</thing:thing-descriptions>

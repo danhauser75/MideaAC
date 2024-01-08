@@ -1,0 +1,90 @@
+{
+	"deviceMapping": {
+		"id": [
+			"cgllc.airmonitor.b1"
+		],
+		"propertyMethod": "get_value",
+		"maxProperties": 6,
+		"channels": [
+			{
+				"property": "battery",
+				"friendlyName": "Battery",
+				"channel": "battery",
+				"channelType": "system:battery-level",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": []
+			},
+			{
+				"property": "pm25",
+				"friendlyName": "PM2.5",
+				"channel": "pm25",
+				"type": "Number",
+				"stateDescription": {
+					"pattern": "%.1f",
+					"readOnly": true
+				},
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": []
+			},
+			{
+				"property": "co2e",
+				"friendlyName": "CO2e",
+				"channel": "co2",
+				"description": "Carbon Dioxide",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [],
+				"tags": [
+					"Measurement"
+				]
+			},
+			{
+				"property": "tvoc",
+				"friendlyName": "tVOC",
+				"channel": "tvoc",
+				"description": "Total Volatile Organic Compounds",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [],
+				"tags": [
+					"Measurement"
+				]
+			},
+			{
+				"property": "humidity",
+				"friendlyName": "Humidity",
+				"channel": "humidity",
+				"type": "Number:Dimensionless",
+				"unit": "PERCENT",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [],
+				"category": "humidity",
+				"tags": [
+					"Measurement",
+					"Humidity"
+				]
+			},
+			{
+				"property": "temperature",
+				"friendlyName": "Temperature",
+				"channel": "temperature",
+				"type": "Number:Temperature",
+				"unit": "CELSIUS",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [],
+				"category": "temperature",
+				"tags": [
+					"Measurement",
+					"Temperature"
+				]
+			}
+		]
+	}
+}

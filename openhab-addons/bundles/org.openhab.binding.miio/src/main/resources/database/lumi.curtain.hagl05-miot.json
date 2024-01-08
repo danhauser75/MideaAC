@@ -1,0 +1,290 @@
+{
+	"deviceMapping": {
+		"id": [
+			"lumi.curtain.hagl05"
+		],
+		"propertyMethod": "get_properties",
+		"maxProperties": 1,
+		"channels": [
+			{
+				"property": "fault",
+				"siid": 2,
+				"piid": 1,
+				"friendlyName": "Curtain - Device Fault",
+				"channel": "fault",
+				"type": "Number",
+				"stateDescription": {
+					"readOnly": true,
+					"options": [
+						{
+							"value": "0",
+							"label": "No faults"
+						}
+					]
+				},
+				"refresh": true,
+				"actions": [],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"No faults\"]`"
+			},
+			{
+				"property": "motor-control",
+				"siid": 2,
+				"piid": 2,
+				"friendlyName": "Curtain - Motor Control",
+				"channel": "motor_control",
+				"type": "Number",
+				"stateDescription": {
+					"options": [
+						{
+							"value": "0",
+							"label": "Pause"
+						},
+						{
+							"value": "1",
+							"label": "Open"
+						},
+						{
+							"value": "2",
+							"label": "Close"
+						},
+						{
+							"value": "3",
+							"label": "auto"
+						}
+					]
+				},
+				"refresh": false,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"Pause\",\"1\"\u003d\"Open\",\"2\"\u003d\"Close\",\"3\"\u003d\"auto\"]`"
+			},
+			{
+				"property": "current-position",
+				"siid": 2,
+				"piid": 3,
+				"friendlyName": "Curtain - Current Position",
+				"channel": "current-position",
+				"type": "Number:Dimensionless",
+				"unit": "percentage",
+				"stateDescription": {
+					"minimum": 0,
+					"maximum": 100,
+					"step": 1,
+					"pattern": "%.0f %unit%",
+					"readOnly": true
+				},
+				"refresh": true,
+				"actions": []
+			},
+			{
+				"property": "status",
+				"siid": 2,
+				"piid": 6,
+				"friendlyName": "Curtain - Status",
+				"channel": "status",
+				"type": "Number",
+				"stateDescription": {
+					"readOnly": true,
+					"options": [
+						{
+							"value": "0",
+							"label": "Stopped"
+						},
+						{
+							"value": "1",
+							"label": "Opening"
+						},
+						{
+							"value": "2",
+							"label": "Closing"
+						}
+					]
+				},
+				"refresh": true,
+				"actions": [],
+				"category": "status",
+				"tags": [
+					"Status"
+				],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"Stopped\",\"1\"\u003d\"Opening\",\"2\"\u003d\"Closing\"]`"
+			},
+			{
+				"property": "target-position",
+				"siid": 2,
+				"piid": 7,
+				"friendlyName": "Curtain - Target Position",
+				"channel": "target-position",
+				"type": "Number:Dimensionless",
+				"unit": "percentage",
+				"stateDescription": {
+					"minimum": 0,
+					"maximum": 100,
+					"step": 1,
+					"pattern": "%.0f %unit%"
+				},
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "manual-enabled",
+				"siid": 4,
+				"piid": 1,
+				"friendlyName": "curtain_cfg - Manual Enabled",
+				"channel": "manual-enabled",
+				"type": "Number",
+				"stateDescription": {
+					"options": [
+						{
+							"value": "0",
+							"label": "Disable"
+						},
+						{
+							"value": "1",
+							"label": "Enable"
+						}
+					]
+				},
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"Disable\",\"1\"\u003d\"Enable\"]`"
+			},
+			{
+				"property": "polarity",
+				"siid": 4,
+				"piid": 2,
+				"friendlyName": "Curtain_cfg - Polarity",
+				"channel": "polarity",
+				"type": "Number",
+				"stateDescription": {
+					"options": [
+						{
+							"value": "0",
+							"label": "Positive"
+						},
+						{
+							"value": "1",
+							"label": "Reverse"
+						}
+					]
+				},
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"Positive\",\"1\"\u003d\"Reverse\"]`"
+			},
+			{
+				"property": "pos-limit",
+				"siid": 4,
+				"piid": 3,
+				"friendlyName": "curtain_cfg - Position Limit",
+				"channel": "pos-limit",
+				"type": "Number",
+				"stateDescription": {
+					"options": [
+						{
+							"value": "0",
+							"label": "Unlimit"
+						},
+						{
+							"value": "1",
+							"label": "Limit"
+						}
+					]
+				},
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"Unlimit\",\"1\"\u003d\"Limit\"]`"
+			},
+			{
+				"property": "en-night-tip-light",
+				"siid": 4,
+				"piid": 4,
+				"friendlyName": "Curtain_cfg - En_night_tip_light",
+				"channel": "en_night_tip_light",
+				"type": "Number",
+				"stateDescription": {
+					"options": [
+						{
+							"value": "0",
+							"label": "Disable"
+						},
+						{
+							"value": "1",
+							"label": "Enable"
+						}
+					]
+				},
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				],
+				"readmeComment": "Value mapping `[\"0\"\u003d\"Disable\",\"1\"\u003d\"Enable\"]`"
+			},
+			{
+				"property": "run-time",
+				"siid": 4,
+				"piid": 5,
+				"friendlyName": "Curtain_cfg - Run-time",
+				"channel": "run-time",
+				"type": "Number",
+				"stateDescription": {
+					"minimum": 0,
+					"maximum": 255,
+					"step": 1,
+					"pattern": "%.0f",
+					"readOnly": true
+				},
+				"refresh": true,
+				"actions": []
+			},
+			{
+				"property": "adjust-value",
+				"siid": 5,
+				"piid": 1,
+				"friendlyName": "Motor_controller - Adjust_value",
+				"channel": "adjust_value",
+				"type": "Number",
+				"stateDescription": {
+					"minimum": -100,
+					"maximum": 100,
+					"step": 1,
+					"pattern": "%.0f"
+				},
+				"refresh": false,
+				"actions": [
+					{
+						"command": "set_properties",
+						"parameterType": "NUMBER"
+					}
+				]
+			}
+		],
+		"experimental": true
+	}
+}

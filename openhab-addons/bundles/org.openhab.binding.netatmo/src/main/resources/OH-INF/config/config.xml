@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="https://openhab.org/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/config-description/v1.0.0
+		https://openhab.org/schemas/config-description-1.0.0.xsd">
+
+	<config-description uri="netatmo:api_bridge">
+		<parameter name="clientId" type="text" required="true">
+			<label>@text/config.clientId.label</label>
+			<description>@text/config.clientId.description</description>
+		</parameter>
+
+		<parameter name="clientSecret" type="text" required="true">
+			<label>@text/config.clientSecret.label</label>
+			<description>@text/config.clientSecret.description</description>
+			<context>password</context>
+		</parameter>
+
+		<parameter name="webHookUrl" type="text" required="false">
+			<label>@text/config.webHookUrl.label</label>
+			<description>@text/config.webHookUrl.description</description>
+		</parameter>
+
+		<parameter name="webHookPostfix" type="text" required="false">
+			<label>@text/config.webHookPostfix.label</label>
+			<description>@text/config.webHookPostfix.description</description>
+		</parameter>
+
+		<parameter name="reconnectInterval" type="integer" unit="s">
+			<label>@text/config.reconnectInterval.label</label>
+			<description>@text/config.reconnectInterval.description</description>
+			<default>300</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:sum_rain:config">
+		<parameter name="period" type="text">
+			<label>@text/config.period.label</label>
+			<description>@text/config.period.sum_rain.description</description>
+			<options>
+				<option value="30min">@text/config.period.option.30min</option>
+				<option value="1hour">@text/config.period.option.1hour</option>
+				<option value="3hours">@text/config.period.option.3hours</option>
+				<option value="1day">@text/config.period.option.1day</option>
+				<option value="1week">@text/config.period.option.1week</option>
+				<option value="1month">@text/config.period.option.1month</option>
+			</options>
+			<default>1week</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:measure:config">
+		<parameter name="limit" type="text">
+			<label>@text/config.limit.label</label>
+			<description>@text/config.limit.description</description>
+			<options>
+				<option value="MIN">@text/config.limit.option.MIN</option>
+				<option value="MAX">@text/config.limit.option.MAX</option>
+			</options>
+			<default>MIN</default>
+		</parameter>
+		<parameter name="period" type="text">
+			<label>@text/config.period.label</label>
+			<description>@text/config.period.measure.description</description>
+			<options>
+				<option value="30min">@text/config.period.option.30min</option>
+				<option value="1hour">@text/config.period.option.1hour</option>
+				<option value="3hours">@text/config.period.option.3hours</option>
+				<option value="1day">@text/config.period.option.1day</option>
+				<option value="1week">@text/config.period.option.1week</option>
+				<option value="1month">@text/config.period.option.1month</option>
+			</options>
+			<default>1week</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:timestamp:config">
+		<parameter name="limit" type="text">
+			<label>@text/config.limit.label</label>
+			<description>@text/config.limit.description</description>
+			<options>
+				<option value="DATE_MIN">@text/config.limit.option.DATE_MIN</option>
+				<option value="DATE_MAX">@text/config.limit.option.DATE_MAX</option>
+			</options>
+			<default>DATE_MIN</default>
+		</parameter>
+		<parameter name="period" type="text">
+			<label>@text/config.period.label</label>
+			<description>@text/config.period.timestamp.description</description>
+			<options>
+				<option value="1week">@text/config.period.option.1week</option>
+				<option value="1month">@text/config.period.option.1month</option>
+			</options>
+			<default>1week</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:device">
+		<parameter name="id" type="text" pattern="([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})" required="true">
+			<label>@text/config.equipmentId.label</label>
+			<description>@text/config.equipmentId.description</description>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:virtual">
+		<parameter name="id" type="text" required="true">
+			<label>@text/config.thingId.label</label>
+			<description>@text/config.thingId.description</description>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:home">
+		<parameter name="id" type="text" required="false">
+			<label>@text/config.thingId.label</label>
+			<description>@text/config.thingId.description</description>
+		</parameter>
+
+		<parameter name="securityId" type="text" required="false">
+			<label>@text/config.securityId.label</label>
+			<description>@text/config.securityId.description</description>
+			<advanced>true</advanced>
+		</parameter>
+
+		<parameter name="energyId" type="text" required="false">
+			<label>@text/config.energyId.label</label>
+			<description>@text/config.energyId.description</description>
+			<advanced>true</advanced>
+		</parameter>
+
+		<parameter name="refreshInterval" type="integer" min="20" unit="s">
+			<label>@text/config.refreshInterval.label</label>
+			<description>@text/config.refreshInterval.description</description>
+			<default>180</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="netatmo:configurable">
+		<parameter name="id" type="text" pattern="([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})" required="true">
+			<label>@text/config.equipmentId.label</label>
+			<description>@text/config.equipmentId.description</description>
+		</parameter>
+
+		<parameter name="refreshInterval" type="integer" min="20" unit="s">
+			<label>@text/config.refreshInterval.label</label>
+			<description>@text/config.refreshInterval.description</description>
+			<default>180</default>
+		</parameter>
+	</config-description>
+
+</config-description:config-descriptions>

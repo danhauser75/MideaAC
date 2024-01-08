@@ -1,0 +1,206 @@
+{
+	"deviceMapping": {
+		"id": [
+			"zhimi.humidifier.v1",
+			"zhimi.humidifier.ca1"
+		],
+		"channels": [
+			{
+				"property": "power",
+				"friendlyName": "Power",
+				"channel": "power",
+				"type": "Switch",
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_power",
+						"parameterType": "ONOFF"
+					}
+				],
+				"category": "switch",
+				"tags": [
+					"Switch"
+				]
+			},
+			{
+				"property": "mode",
+				"friendlyName": "Mode",
+				"channel": "mode",
+				"type": "String",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "set_mode",
+						"parameterType": "STRING"
+					}
+				],
+				"tags": [
+					"Control"
+				]
+			},
+			{
+				"property": "humidity",
+				"friendlyName": "Humidity",
+				"channel": "humidity",
+				"type": "Number:Dimensionless",
+				"unit": "PERCENT",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [],
+				"category": "humidity",
+				"tags": [
+					"Measurement",
+					"Humidity"
+				]
+			},
+			{
+				"property": "limit_hum",
+				"friendlyName": "Humidity Set",
+				"channel": "setHumidity",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [
+					{
+						"command": "set_limit_hum",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "aqi",
+				"friendlyName": "Air Quality Index",
+				"channel": "aqi",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [],
+				"tags": [
+					"Measurement"
+				]
+			},
+			{
+				"property": "trans_level",
+				"friendlyName": "Trans_level",
+				"channel": "translevel",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": []
+			},
+			{
+				"property": "led_b",
+				"friendlyName": "LED Brightness",
+				"channel": "bright",
+				"type": "Dimmer",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "set_led_b",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "buzzer",
+				"friendlyName": "Buzzer Status",
+				"channel": "buzzer",
+				"type": "Switch",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "set_buzzer",
+						"parameterType": "ONOFF"
+					}
+				]
+			},
+			{
+				"property": "depth",
+				"friendlyName": "Depth",
+				"channel": "depth",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": []
+			},
+			{
+				"property": "dry",
+				"friendlyName": "Dry",
+				"channel": "dry",
+				"type": "Switch",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [
+					{
+						"command": "set_dry",
+						"parameterType": "ONOFF"
+					}
+				]
+			},
+			{
+				"property": "use_time",
+				"friendlyName": "Run Time",
+				"channel": "usedhours",
+				"type": "Number:Time",
+				"unit": "hours",
+				"stateDescription": {
+					"pattern": "%.0f %unit%"
+				},
+				"refresh": true,
+				"transformation": "SecondsToHours",
+				"ChannelGroup": "Status",
+				"actions": [],
+				"category": "time"
+			},
+			{
+				"property": "speed",
+				"friendlyName": "Motor Speed",
+				"channel": "motorspeed",
+				"type": "Number",
+				"stateDescription": {
+					"pattern": "%.0f rpm"
+				},
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": []
+			},
+			{
+				"property": "temp_dec",
+				"friendlyName": "Temperature",
+				"channel": "temperature",
+				"type": "Number:Temperature",
+				"unit": "CELSIUS",
+				"stateDescription": {
+					"pattern": "%.1f %unit%",
+					"readOnly": true
+				},
+				"refresh": true,
+				"transformation": "/10",
+				"ChannelGroup": "Status",
+				"actions": [],
+				"category": "temperature",
+				"tags": [
+					"Measurement",
+					"Temperature"
+				]
+			},
+			{
+				"property": "child_lock",
+				"friendlyName": "Child Lock",
+				"channel": "childlock",
+				"type": "Switch",
+				"refresh": true,
+				"ChannelGroup": "Status",
+				"actions": [
+					{
+						"command": "set_child_lock",
+						"parameterType": "ONOFF"
+					}
+				]
+			}
+		]
+	}
+}

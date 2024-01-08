@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.openhab.addons.bundles</groupId>
+    <artifactId>org.openhab.addons.reactor.bundles</artifactId>
+    <version>4.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>org.openhab.persistence.jpa</artifactId>
+
+  <name>openHAB Add-ons :: Bundles :: Persistence Service :: JPA</name>
+
+  <properties>
+    <bnd.importpackage>!com.ibm.*,!com.sun.*,!oracle.*,!javax.interceptor.*,!javax.enterprise.*,!javax.rmi,!org.apache.bval.*,!net.sf.cglib.*,!org.apache.commons.beanutils.*,!org.apache.geronimo.*,!org.apache.avalon.*,!org.apache.log,!org.apache.tools.*,!org.apache.xerces.*,!org.jboss.*,!org.postgresql.*,!org.slf4j.impl,!weblogic.*,org.apache.derby.*;resolution:=optional</bnd.importpackage>
+    <openjpa.version>3.2.2</openjpa.version>
+  </properties>
+
+  <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.apache.openjpa/openjpa-all -->
+    <dependency>
+      <groupId>org.apache.openjpa</groupId>
+      <artifactId>openjpa-all</artifactId>
+      <version>${openjpa.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.derby/derby -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.14.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>el-api</artifactId>
+      <version>2.2</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.openjpa</groupId>
+        <artifactId>openjpa-maven-plugin</artifactId>
+        <version>${openjpa.version}</version>
+        <configuration>
+          <excludes>org/apache/bval/**</excludes>
+          <includes>**/model/*.class</includes>
+          <addDefaultConstructor>true</addDefaultConstructor>
+          <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
+            <!-- set the version to be the same as the level in your runtime -->
+            <version>${openjpa.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>enhancer</id>
+            <goals>
+              <goal>enhance</goal>
+            </goals>
+            <phase>process-classes</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

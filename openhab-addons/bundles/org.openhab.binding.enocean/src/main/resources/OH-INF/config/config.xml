@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config-description:config-descriptions
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config-description="https://openhab.org/schemas/config-description/v1.0.0"
+	xsi:schemaLocation="https://openhab.org/schemas/config-description/v1.0.0 https://openhab.org/schemas/config-description-1.0.0.xsd">
+
+	<config-description uri="channel-type:enocean:genericChannel">
+		<parameter name="transformationType" type="text" required="true">
+			<label>Transformation Type</label>
+			<description>The type of the transformation, e.g. "MAP"</description>
+		</parameter>
+		<parameter name="transformationFunction" type="text" required="true">
+			<label>Transformation Function</label>
+			<description>The transformation function, e.g. for transformation type map => filename of mapping file</description>
+		</parameter>
+	</config-description>
+
+	<config-description uri="channel-type:enocean:listeningRockerChannel">
+		<parameter name="enoceanId" type="text">
+			<label>EnOceanId</label>
+			<description>EnOcean Id to listen to</description>
+		</parameter>
+		<parameter name="channel" type="text">
+			<label>Channel</label>
+			<description>Channel of rocker switch to listen to</description>
+			<options>
+				<option value="channelA">Channel A</option>
+				<option value="channelB">Channel B</option>
+			</options>
+			<default>channelA</default>
+		</parameter>
+		<parameter name="handleSecondAction" type="boolean">
+			<label>Handle Second Action</label>
+			<description>React if selected channel is pressed as second action too</description>
+			<default>false</default>
+		</parameter>
+		<parameter name="switchMode" type="text">
+			<label>Switch Mode</label>
+			<options>
+				<option value="rockerSwitch">Rocker switch</option>
+				<option value="toggleButtonDir1">Toggle button (upper button)</option>
+				<option value="toggleButtonDir2">Toggle button (lower button)</option>
+			</options>
+			<default>rockerSwitch</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="channel-type:enocean:virtualRockerChannel">
+		<parameter name="duration" type="integer" unit="ms">
+			<label>Time Between Press and Release Message</label>
+			<default>250</default>
+		</parameter>
+		<parameter name="switchMode" type="text">
+			<label>Switch Mode</label>
+			<options>
+				<option value="rockerSwitch">Rocker switch</option>
+				<option value="toggleButtonDir1">Toggle button (upper button)</option>
+				<option value="toggleButtonDir2">Toggle button (lower button)</option>
+			</options>
+			<default>rockerSwitch</default>
+		</parameter>
+	</config-description>
+
+	<config-description uri="profile:enocean:rockerswitchaction-toggle-switch">
+		<parameter name="channelAFilter" type="text">
+			<label>Channel A Filter</label>
+			<default>*</default>
+			<options>
+				<option value="*">Any Direction</option>
+				<option value="DIR1">Direction 1</option>
+				<option value="DIR2">Direction 2</option>
+				<option value="-">No Direction</option>
+			</options>
+		</parameter>
+		<parameter name="channelBFilter" type="text">
+			<label>Channel B Filter</label>
+			<default>*</default>
+			<options>
+				<option value="*">Any Direction</option>
+				<option value="DIR1">Direction 1</option>
+				<option value="DIR2">Direction 2</option>
+				<option value="-">No Direction</option>
+			</options>
+		</parameter>
+	</config-description>
+
+</config-description:config-descriptions>

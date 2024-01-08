@@ -1,0 +1,149 @@
+{
+	"deviceMapping": {
+		"id": [
+			"dmaker.fan.p5"
+		],
+		"channels": [
+			{
+				"property": "power",
+				"friendlyName": "Power",
+				"channel": "power",
+				"type": "Switch",
+				"refresh": true,
+				"actions": [
+					{
+						"command": "s_power",
+						"parameterType": "ONOFF"
+					}
+				],
+				"category": "switch",
+				"tags": [
+					"Switch"
+				]
+			},
+			{
+				"property": "roll",
+				"friendlyName": "Rotation",
+				"channel": "roll",
+				"type": "Switch",
+				"refresh": true,
+				"actions": [
+					{
+						"command": "s_roll",
+						"parameterType": "ONOFF"
+					}
+				]
+			},
+			{
+				"property": "mode",
+				"friendlyName": "Mode",
+				"channel": "mode",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_mode",
+						"parameterType": "STRING"
+					}
+				],
+				"tags": [
+					"Control"
+				]
+			},
+			{
+				"property": "roll_angle",
+				"friendlyName": "Angle",
+				"channel": "angle",
+				"type": "Number",
+				"stateDescription": {
+					"minimum": 0,
+					"maximum": 360,
+					"step": 1,
+					"pattern": "%.0f"
+				},
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_angle",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "timer_off",
+				"friendlyName": "Timer",
+				"channel": "timer",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_t_off",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "beep_sound",
+				"friendlyName": "Beep Sound",
+				"channel": "beep",
+				"type": "Switch",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_beep_sound",
+						"parameterType": "ONOFF"
+					}
+				]
+			},
+			{
+				"property": "light",
+				"friendlyName": "Light",
+				"channel": "light",
+				"type": "Number",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_light",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "child_lock",
+				"friendlyName": "Child Lock",
+				"channel": "child_lock",
+				"type": "Switch",
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_lock",
+						"parameterType": "ONOFF"
+					}
+				]
+			},
+			{
+				"property": "speed",
+				"friendlyName": "Speed",
+				"channel": "speed",
+				"type": "Number",
+				"stateDescription": {
+					"pattern": "%.0f"
+				},
+				"refresh": true,
+				"ChannelGroup": "actions",
+				"actions": [
+					{
+						"command": "s_speed",
+						"parameterType": "NUMBER"
+					}
+				]
+			}
+		]
+	}
+}

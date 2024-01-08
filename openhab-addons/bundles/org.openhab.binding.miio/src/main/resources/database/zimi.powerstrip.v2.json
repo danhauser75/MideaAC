@@ -1,0 +1,121 @@
+{
+	"deviceMapping": {
+		"id": [
+			"qmi.powerstrip.v1",
+			"zimi.powerstrip.v2"
+		],
+		"channels": [
+			{
+				"property": "power",
+				"friendlyName": "Power",
+				"channel": "power",
+				"type": "Switch",
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_power",
+						"parameterType": "ONOFF"
+					}
+				],
+				"category": "switch",
+				"tags": [
+					"Switch"
+				]
+			},
+			{
+				"property": "power_consume_rate",
+				"friendlyName": "Power Consumption",
+				"channel": "powerUsage",
+				"type": "Number",
+				"stateDescription": {
+					"pattern": "%.0fW"
+				},
+				"refresh": true,
+				"actions": [
+					{
+						"parameterType": "EMPTY"
+					}
+				]
+			},
+			{
+				"property": "wifi_led",
+				"friendlyName": "wifi LED",
+				"channel": "led",
+				"type": "Switch",
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_wifi_led",
+						"parameterType": "ONOFF"
+					}
+				]
+			},
+			{
+				"property": "power_price",
+				"friendlyName": "power_price",
+				"channel": "power_price",
+				"type": "Number",
+				"refresh": true,
+				"actions": [
+					{
+						"command": "set_power_price",
+						"parameterType": "NUMBER"
+					}
+				]
+			},
+			{
+				"property": "current",
+				"friendlyName": "Current",
+				"channel": "current",
+				"type": "Number",
+				"stateDescription": {
+					"pattern": "%.2fA"
+				},
+				"refresh": true,
+				"actions": []
+			},
+			{
+				"property": "temperature",
+				"friendlyName": "Temperature",
+				"channel": "temperature",
+				"type": "Number:Temperature",
+				"unit": "CELSIUS",
+				"stateDescription": {
+					"pattern": "%.1f %unit%",
+					"readOnly": true
+				},
+				"refresh": true,
+				"actions": [],
+				"category": "temperature",
+				"tags": [
+					"Measurement",
+					"Temperature"
+				]
+			},
+			{
+				"property": "lp_autooff",
+				"friendlyName": "Low Power Auto Off",
+				"channel": "lp_autooff",
+				"type": "Number",
+				"refresh": true,
+				"actions": []
+			},
+			{
+				"property": "lp_autooff_delay",
+				"friendlyName": "Low Power Limit Time",
+				"channel": "lp_autooff_delay",
+				"type": "Number",
+				"refresh": true,
+				"actions": []
+			},
+			{
+				"property": "lp_threshold",
+				"friendlyName": "Low Power Threshold",
+				"channel": "lp_threshold",
+				"type": "Number",
+				"refresh": true,
+				"actions": []
+			}
+		]
+	}
+}
