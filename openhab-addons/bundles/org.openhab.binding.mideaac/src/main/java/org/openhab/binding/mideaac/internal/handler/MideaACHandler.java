@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,7 +33,6 @@ import javax.measure.quantity.Temperature;
 import javax.measure.spi.SystemOfUnits;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.jetty.client.HttpClient;
 import org.openhab.binding.mideaac.internal.MideaACConfiguration;
@@ -92,10 +92,10 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         this.configuration = configuration;
     }
 
-    private @Nullable Map<String, String> properties;
-    private @Nullable String ipAddress = null;
-    private @NonNull String ipPort;
-    private @Nullable String deviceId = null;
+    private Map<String, String> properties = null;
+    private String ipAddress = null;
+    private String ipPort = null;
+    private String deviceId = null;
     private int version = 0;
 
     private final DataSmoother dataHistory = new DataSmoother();
@@ -137,9 +137,9 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
     private static final StringType SWING_MODE_VERTICAL = new StringType("VERTICAL");
     private static final StringType SWING_MODE_HORIZONTAL = new StringType("HORIZONTAL");
     private static final StringType SWING_MODE_BOTH = new StringType("BOTH");
-    private Clouds clouds;
+    private final Clouds clouds;
 
-    private ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
 
     private final SystemOfUnits systemOfUnits;
 
@@ -153,8 +153,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         return getConnectionManager().getLastResponse();
     }
 
-    public MideaACHandler(Thing thing, String ipv4Address, UnitProvider unitProvider, HttpClient httpClient,
-            Clouds clouds) {
+    public MideaACHandler(Thing thing, String ipv4Address, UnitProvider unitProvider, HttpClient httpClient, Clouds clouds) {
         super(thing);
         this.thing = thing;
         this.systemOfUnits = unitProvider.getMeasurementSystem();
@@ -170,7 +169,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
     }
 
     protected boolean isImperial() {
-        return systemOfUnits instanceof ImperialUnits ? true : false;
+        return systemOfUnits instanceof ImperialUnits;
     }
 
     @Override
@@ -193,24 +192,17 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             return;
         }
 
-        if (channelUID.getId().equals(CHANNEL_POWER)) {
-            handlePower(command);
-        } else if (channelUID.getId().equals(CHANNEL_OPERATIONAL_MODE)) {
-            handleOperationalMode(command);
-        } else if (channelUID.getId().equals(CHANNEL_TARGET_TEMPERATURE)) {
-            handleTargetTemperature(command);
-        } else if (channelUID.getId().equals(CHANNEL_FAN_SPEED)) {
-            handleFanSpeed(command);
-        } else if (channelUID.getId().equals(CHANNEL_ECO_MODE)) {
-            handleEcoMode(command);
-        } else if (channelUID.getId().equals(CHANNEL_TURBO_MODE)) {
-            handleTurboMode(command);
-        } else if (channelUID.getId().equals(CHANNEL_SWING_MODE)) {
-            handleSwingMode(command);
-        } else if (channelUID.getId().equals(CHANNEL_SCREEN_DISPLAY)) {
-            handleScreenDisplay(command);
-        } else if (channelUID.getId().equals(CHANNEL_TEMP_UNIT)) {
-            handleTempUnit(command);
+        switch (channelUID.getId()) {
+            case CHANNEL_POWER -> handlePower(command);
+            case CHANNEL_OPERATIONAL_MODE -> handleOperationalMode(command);
+            case CHANNEL_TARGET_TEMPERATURE -> handleTargetTemperature(command);
+            case CHANNEL_FAN_SPEED -> handleFanSpeed(command);
+            case CHANNEL_ECO_MODE -> handleEcoMode(command);
+            case CHANNEL_TURBO_MODE -> handleTurboMode(command);
+            case CHANNEL_SWING_MODE -> handleSwingMode(command);
+            case CHANNEL_SCREEN_DISPLAY -> handleScreenDisplay(command);
+            case CHANNEL_TEMP_UNIT -> handleTempUnit(command);
+            default -> logger.debug("Unexpected channelUID {} has received {} with command {}", channelUID.getId(), command.toString());
         }
     }
 
@@ -285,10 +277,10 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         CommandSet commandSet = CommandSet.fromResponse(lastResponse);
 
         if (command instanceof DecimalType) {
-            QuantityType<Temperature> quantity = new QuantityType<Temperature>(((DecimalType) command).doubleValue(),
-                    lastResponse.getTempUnit() == true ? ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS);
+            QuantityType<Temperature> quantity = new QuantityType<>(((DecimalType) command).doubleValue(), lastResponse.getTempUnit() == true ? ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS);
             commandSet.setPowerState(true);
-            if (lastResponse.getTempUnit() == true) { // F
+            if (lastResponse.getTempUnit() == true) { 
+                // F
                 if (isImperial()) {
                     logger.debug("handleTargetTemperature: Set field of type Integer F > F");
                     commandSet.setTargetTemperature(convertTargetFahrenheitTemperatureToInRange(quantity.floatValue()));
@@ -637,7 +629,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         private final long CONNECTION_MONITOR_DELAY = 10L;
 
         private @Nullable Response lastResponse;
-        private MideaACHandler mideaACHandler;
+        private final MideaACHandler mideaACHandler;
 
         @Nullable
         public Response getLastResponse() {
@@ -659,9 +651,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
          * devices that support serial.
          */
 
-        private Date getTokenReqested() {
-            Cloud cloud = mideaACHandler.getClouds().get(getConfiguration().getEmail(),
-                    getConfiguration().getPassword(), cloudProvider);
+        private Date getTokenReqested(){
+            Cloud cloud = mideaACHandler.getClouds().get(getConfiguration().getEmail(), getConfiguration().getPassword(), cloudProvider);
             return cloud.getTokenRequested();
         }
 

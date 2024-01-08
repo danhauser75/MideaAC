@@ -4,23 +4,23 @@ import java.util.HashMap;
 
 public class Clouds {
 
-    private final HashMap<Integer, Cloud> clouds;
-
+    private final HashMap<String, Cloud> clouds;
+    
     public Clouds() {
-        clouds = new HashMap<Integer, Cloud>();
+        clouds = new HashMap<>();
     }
 
     private Cloud add(String email, String password, CloudProvider cloudProvider) {
-        int hash = (email + password + cloudProvider.getName()).hashCode();
+        String key = email + password + cloudProvider.getName();
         Cloud cloud = new Cloud(email, password, cloudProvider);
-        clouds.put(hash, cloud);
+        clouds.put(key, cloud);
         return cloud;
     }
 
     public Cloud get(String email, String password, CloudProvider cloudProvider) {
-        int hash = (email + password + cloudProvider.getName()).hashCode();
-        if (clouds.containsKey(hash)) {
-            return clouds.get(hash);
+        String key = email + password + cloudProvider.getName();
+        if (clouds.containsKey(key)) {
+            return clouds.get(key);
         }
         return add(email, password, cloudProvider);
     }
