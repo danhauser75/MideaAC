@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,6 +92,15 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
     }
 
     private Map<String, String> properties = null;
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
+    }
+
     private String ipAddress = null;
     private String ipPort = null;
     private String deviceId = null;
@@ -153,7 +161,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         return getConnectionManager().getLastResponse();
     }
 
-    public MideaACHandler(Thing thing, String ipv4Address, UnitProvider unitProvider, HttpClient httpClient, Clouds clouds) {
+    public MideaACHandler(Thing thing, String ipv4Address, UnitProvider unitProvider, HttpClient httpClient,
+            Clouds clouds) {
         super(thing);
         this.thing = thing;
         this.systemOfUnits = unitProvider.getMeasurementSystem();
@@ -202,7 +211,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             case CHANNEL_SWING_MODE -> handleSwingMode(command);
             case CHANNEL_SCREEN_DISPLAY -> handleScreenDisplay(command);
             case CHANNEL_TEMP_UNIT -> handleTempUnit(command);
-            default -> logger.debug("Unexpected channelUID {} has received {} with command {}", channelUID.getId(), command.toString());
+            default -> logger.debug("Unexpected channelUID '{}' has received with command '{}'", channelUID.getId(),
+                    command.toString());
         }
     }
 
@@ -272,14 +282,22 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
     }
 
     public void handleTargetTemperature(Command command) {
-
+        if (command == null) {
+            logger.debug("handleTargetTemperature command was null");
+            return;
+        }
         Response lastResponse = getLastResponse();
+        if (lastResponse == null) {
+            logger.debug("handleTargetTemperature lastResponse was null");
+            return;
+        }
         CommandSet commandSet = CommandSet.fromResponse(lastResponse);
 
         if (command instanceof DecimalType) {
-            QuantityType<Temperature> quantity = new QuantityType<>(((DecimalType) command).doubleValue(), lastResponse.getTempUnit() == true ? ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS);
+            QuantityType<Temperature> quantity = new QuantityType<>(((DecimalType) command).doubleValue(),
+                    lastResponse.getTempUnit() == true ? ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS);
             commandSet.setPowerState(true);
-            if (lastResponse.getTempUnit() == true) { 
+            if (lastResponse.getTempUnit() == true) {
                 // F
                 if (isImperial()) {
                     logger.debug("handleTargetTemperature: Set field of type Integer F > F");
@@ -320,7 +338,6 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                     commandSet.setTargetTemperature(
                             convertTargetCelsiusTemperatureToInRange(quantity.toUnit(SIUnits.CELSIUS).floatValue()));
                 }
-
                 getConnectionManager().sendCommandAndMonitor(commandSet);
             }
         } else {
@@ -465,20 +482,21 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
     @Override
     public void initialize() {
-        connectionManager.disconnect();
+        // connectionManager.disconnect();
+        getConnectionManager().disconnect();
 
         setCloudProvider(CloudProvider.getCloudProvider("MSmartHome"));
         setSecurity(new Security(cloudProvider));
 
         setConfiguration(getConfigAs(MideaACConfiguration.class));
-        properties = editProperties();
-
+        // properties = editProperties();
+        setProperties(editProperties());
         logger.debug("MideaACHandler config for {} is {}", thing.getUID(), getConfiguration());
 
         if (!getConfiguration().isValid()) {
             logger.warn("Configuration invalid for {}", thing.getUID());
             if (getConfiguration().isDiscoveryNeeded()) {
-                logger.warn("Discovery needed, discovering....", thing.getUID());
+                logger.warn("Discovery needed, thing '{}' is discovering....", thing.getUID());
                 updateStatus(ThingStatus.UNKNOWN, ThingStatusDetail.CONFIGURATION_PENDING,
                         "Configuration missing, discovery needed. Discovering...");
                 MideaACDiscoveryService discoveryService = new MideaACDiscoveryService();
@@ -503,7 +521,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         ipAddress = getConfiguration().getIpAddress();
         ipPort = getConfiguration().getIpPort();
         deviceId = getConfiguration().getDeviceId();
-        version = Integer.parseInt(properties.get(PROPERTY_VERSION).toString());
+        version = Integer.parseInt(getProperties().get(PROPERTY_VERSION).toString());
 
         logger.debug("IPAddress: {}", ipAddress);
         logger.debug("IPPort: {}", ipPort);
@@ -518,23 +536,20 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
     @Override
     public void discovered(DiscoveryResult discoveryResult) {
         logger.debug("Discovered {}", thing.getUID());
-        String deviceId = discoveryResult.getProperties().get(CONFIG_DEVICEID).toString();
-        String ipPort = discoveryResult.getProperties().get(CONFIG_IP_PORT).toString();
 
-        Configuration configuration = editConfiguration();
+        Configuration updatedConfiguration = editConfiguration();
 
-        configuration.put(CONFIG_DEVICEID, deviceId);
-        configuration.put(CONFIG_IP_PORT, ipPort);
+        updatedConfiguration.put(CONFIG_DEVICEID, discoveryResult.getProperties().get(CONFIG_DEVICEID).toString());
+        updatedConfiguration.put(CONFIG_IP_PORT, discoveryResult.getProperties().get(CONFIG_IP_PORT).toString());
 
-        updateConfiguration(configuration);
+        updateConfiguration(updatedConfiguration);
 
-        properties = editProperties();
-        properties.put(PROPERTY_VERSION, discoveryResult.getProperties().get(PROPERTY_VERSION).toString());
-        properties.put(PROPERTY_SN, discoveryResult.getProperties().get(PROPERTY_SN).toString());
-        properties.put(PROPERTY_SSID, discoveryResult.getProperties().get(PROPERTY_SSID).toString());
-        properties.put(PROPERTY_TYPE, discoveryResult.getProperties().get(PROPERTY_TYPE).toString());
-        updateProperties(properties);
-
+        setProperties(editProperties());
+        getProperties().put(PROPERTY_VERSION, discoveryResult.getProperties().get(PROPERTY_VERSION).toString());
+        getProperties().put(PROPERTY_SN, discoveryResult.getProperties().get(PROPERTY_SN).toString());
+        getProperties().put(PROPERTY_SSID, discoveryResult.getProperties().get(PROPERTY_SSID).toString());
+        getProperties().put(PROPERTY_TYPE, discoveryResult.getProperties().get(PROPERTY_TYPE).toString());
+        updateProperties(getProperties());
         initialize();
     }
 
@@ -651,8 +666,9 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
          * devices that support serial.
          */
 
-        private Date getTokenReqested(){
-            Cloud cloud = mideaACHandler.getClouds().get(getConfiguration().getEmail(), getConfiguration().getPassword(), cloudProvider);
+        private Date getTokenReqested() {
+            Cloud cloud = mideaACHandler.getClouds().get(getConfiguration().getEmail(),
+                    getConfiguration().getPassword(), cloudProvider);
             return cloud.getTokenRequested();
         }
 
@@ -818,7 +834,6 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             try {
                 logger.trace("Device {}@{} writing handshake_request: {}", thing.getUID(), ipAddress,
                         Utils.bytesToHex(request));
-
                 write(request);
                 byte[] response = read();
                 logger.trace("Device {}@{} response for handshake_request length: {}", thing.getUID(), ipAddress,
@@ -837,8 +852,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
+                                logger.error("doAuthentication has thrown InterruptedException exception {}",
+                                        e.getMessage());
                             }
                             requestStatus(true);
                         } else {
@@ -858,8 +873,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("doAuthentication has thrown IOException exception {}", e.getMessage());
             }
         }
 
@@ -914,7 +928,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                     if (getVersion() == 3) {
                         Decryption8370Result result = mideaACHandler.getSecurity().decode_8370(responseBytes);
                         for (byte[] response : result.getResponses()) {
-                            logger.debug("Response length: " + response.length);
+                            logger.debug("Response length: {}", response.length);
                             logger.trace("Packet: {}", Utils.bytesToHex(responseBytes));
                             if (response.length > 40 + 16) {
                                 byte[] data = mideaACHandler.getSecurity()

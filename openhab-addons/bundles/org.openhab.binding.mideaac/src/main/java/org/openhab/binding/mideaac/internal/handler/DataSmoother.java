@@ -4,14 +4,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class DataSmoother {
 
-    private final Logger logger = LoggerFactory.getLogger(MideaACHandler.class);
-    private final HashMap<String, Float> history = new HashMap<String, Float>();
-    private final ArrayList<String> managed = new ArrayList<String>();
+    // private final Logger logger = LoggerFactory.getLogger(MideaACHandler.class);
+    private final HashMap<String, Float> history = new HashMap<>();
+    private final ArrayList<String> managed = new ArrayList<>();
 
     private static final DecimalFormat df = new DecimalFormat("0.0");
 

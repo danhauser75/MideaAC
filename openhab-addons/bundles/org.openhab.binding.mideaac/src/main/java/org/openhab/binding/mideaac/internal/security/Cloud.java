@@ -28,15 +28,10 @@ import com.google.gson.JsonObject;
 public class Cloud {
     private final Logger logger = LoggerFactory.getLogger(Cloud.class);
 
-    private static final Gson GSON = new Gson();
-
-    // private static final String SERVER_URL = "https://mp-prod.appsmb.com/mas/v5/app/proxy?alias=";
-
+    // private static final Gson GSON = new Gson();
     private static final int CLIENT_TYPE = 1; // Android
     private static final int FORMAT = 2; // JSON
     private static final String LANGUAGE = "en_US";
-    // private static final String APP_ID = "1010";
-    // private static final String SRC = "1010";
 
     private Date tokenRequestedAt = new Date();
 
@@ -159,20 +154,20 @@ public class Cloud {
         try {
             cr = request.send();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Cloud.apiRequest thrown InterruptedException exception {}", e.getMessage());
         } catch (TimeoutException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Cloud.apiRequest thrown TimeoutException exception {}", e.getMessage());
         } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Cloud.apiRequest thrown ExecutionException exception {}", e.getMessage());
         }
 
         if (cr != null) {
             logger.debug("Response json: {}", cr.getContentAsString());
             JsonObject result = new Gson().fromJson(cr.getContentAsString(), JsonObject.class);
-
+            if (result == null) {
+                logger.warn("No response from cloud!");
+                return null;
+            }
             int code = -1;
 
             if (result.get("errorCode") != null) {

@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-Update</actionName>
-            <displayName>Update</displayName>
-            <goals>
-                <goal>update</goal>
-            </goals>
-        </action>
-        <action>
             <actionName>CUSTOM-install spotless:apply</actionName>
-            <displayName>install spotless:apply</displayName>
+            <displayName>Install</displayName>
             <goals>
                 <goal>install</goal>
                 <goal>spotless:apply</goal>
             </goals>
             <properties>
-                <skipTests>true</skipTests>
-                <skipChecks>true</skipChecks>
+                <checkstyle.skip>true</checkstyle.skip>
+                <spotless.check.skip>true</spotless.check.skip>
             </properties>
         </action>
     </actions>

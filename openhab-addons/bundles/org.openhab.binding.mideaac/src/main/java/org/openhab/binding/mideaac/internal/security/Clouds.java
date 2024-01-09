@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class Clouds {
 
     private final HashMap<String, Cloud> clouds;
-    
+
     public Clouds() {
         clouds = new HashMap<>();
     }

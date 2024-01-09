@@ -11,9 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Random;
-import java.util.stream.Stream;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -28,7 +26,6 @@ import org.openhab.binding.mideaac.internal.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -426,17 +423,15 @@ public class Security {
         try {
             path = new URI(url).getPath();
 
-            Stream<Map.Entry<String, JsonElement>> sorted = payload.entrySet().stream()
-                    .sorted((Map.Entry.comparingByKey()));
-
+            // Stream<Map.Entry<String, JsonElement>> sorted =
+            // payload.entrySet().stream().sorted((Map.Entry.comparingByKey()));
             String query = Utils.getQueryString(payload);
 
             String sign = path + query + cloudProvider.getAppKey();
             logger.trace("sign: {}", sign);
             return Utils.bytesToHexLowercase(sha256((sign).getBytes(StandardCharsets.US_ASCII)));
         } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Sign error {}", e.getMessage());
         }
 
         return null;

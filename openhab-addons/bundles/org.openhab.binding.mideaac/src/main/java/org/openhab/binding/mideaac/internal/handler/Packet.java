@@ -2,6 +2,7 @@ package org.openhab.binding.mideaac.internal.handler;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -12,9 +13,9 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Jacek Dobrowolski
  */
 public class Packet {
-    private CommandBase command;
+    private final CommandBase command;
     private byte[] packet;
-    private MideaACHandler mideaACHandler;
+    private final MideaACHandler mideaACHandler;
     // private static Logger logger = LoggerFactory.getLogger(Packet.class);
 
     public Packet(CommandBase command, String deviceId, MideaACHandler mideaACHandler) {
@@ -39,11 +40,19 @@ public class Packet {
                 // 14 bytes
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-        Date d = new Date();
-        byte[] datetimeBytes = { (byte) (d.getYear() / 100), (byte) (d.getYear() % 100), (byte) d.getMonth(),
-                (byte) d.getDate(), (byte) d.getHours(), (byte) d.getMinutes(), (byte) d.getSeconds(), 0x00 }; // TOOD:
-                                                                                                               // set
-                                                                                                               // milliseconds
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+
+        // Date d = new Date();
+        // d.g
+        // int i = cal.get(Calendar.SECOND);
+        // byte[] datetimeBytes = { (byte) (d.getYear() / 100), (byte) (d.getYear() % 100), (byte) d.getMonth(), (byte)
+        // d.getDate(), (byte) d.getHours(), (byte) d.getMinutes(), (byte) d.getSeconds(), 0x00 }; // TOOD:
+        byte[] datetimeBytes = { (byte) (cal.get(Calendar.YEAR) / 100), (byte) (cal.get(Calendar.YEAR) % 100),
+                (byte) cal.get(Calendar.MONTH), (byte) cal.get(Calendar.DATE), (byte) cal.get(Calendar.HOUR),
+                (byte) cal.get(Calendar.MINUTE), (byte) cal.get(Calendar.SECOND), 0x00 }; // TOOD:
+        // set
+        // milliseconds
         System.arraycopy(datetimeBytes, 0, packet, 12, 8);
 
         byte[] idBytes = new BigInteger(deviceId).toByteArray();

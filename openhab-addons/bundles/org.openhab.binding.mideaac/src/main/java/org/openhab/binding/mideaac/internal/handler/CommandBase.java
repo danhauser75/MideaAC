@@ -1,6 +1,7 @@
 package org.openhab.binding.mideaac.internal.handler;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -76,7 +77,7 @@ public class CommandBase {
         }
 
         public static SwingMode fromId(int id) {
-            logger.error("SSWING id " + id);
+            logger.error("SSWING id {}", id);
             for (SwingMode type : values()) {
                 if (type.getId() == id) {
                     return type;
@@ -172,8 +173,12 @@ public class CommandBase {
                 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 // Message ID
                 0x00 };
-        Date d = new Date();
-        data[data.length - 1] = (byte) d.getSeconds();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        // Date d = new Date();
+
+        // data[data.length - 1] = (byte) d.getSeconds();
+        data[data.length - 1] = (byte) cal.get(Calendar.SECOND);
         data[0x02] = (byte) 0xAC;
     }
 

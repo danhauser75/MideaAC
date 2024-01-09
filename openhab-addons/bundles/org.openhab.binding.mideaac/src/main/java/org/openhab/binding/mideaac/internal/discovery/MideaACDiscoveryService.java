@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 @Component(service = DiscoveryService.class, configurationPid = "discovery.mideaac")
 public class MideaACDiscoveryService extends AbstractDiscoveryService {
 
-    private static int DISCOVERY_TIMEOUT_SECONDS = 5; // 5; //
+    private static final int DISCOVERY_TIMEOUT_SECONDS = 5; // 5; //
     private final int RECEIVE_JOB_TIMEOUT = 20000;
     private final int UDP_PACKET_TIMEOUT = RECEIVE_JOB_TIMEOUT - 50;
     private final String MIDEAAC_NAME_PREFIX = "MideaAC";
@@ -60,17 +60,17 @@ public class MideaACDiscoveryService extends AbstractDiscoveryService {
     private final Logger logger = LoggerFactory.getLogger(MideaACDiscoveryService.class);
 
     ///// Network
-    private byte[] buffer = new byte[512];
+    private final byte[] buffer = new byte[512];
     @Nullable
     private DatagramSocket discoverSocket;
 
     // private @Nullable MideaACHandler mideaACHandler;
 
-    private boolean fullDiscovery = false;
+    // private boolean fullDiscovery = false;
     @Nullable
     DiscoveryHandler discoveryHandler;
 
-    private SecurityUtil securityUtil;
+    private final SecurityUtil securityUtil;
 
     public MideaACDiscoveryService() {
         super(SUPPORTED_THING_TYPES_UIDS, DISCOVERY_TIMEOUT_SECONDS, false);
@@ -168,7 +168,7 @@ public class MideaACDiscoveryService extends AbstractDiscoveryService {
      * @throws IOException
      */
     private void startDiscoverSocket() throws SocketException, IOException {
-        fullDiscovery = true;
+        // fullDiscovery = true;
         startDiscoverSocket("255.255.255.255", null);
     }
 

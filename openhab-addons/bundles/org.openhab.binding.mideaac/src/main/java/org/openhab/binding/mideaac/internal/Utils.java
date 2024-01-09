@@ -100,11 +100,11 @@ public class Utils {
 
         bb.putLong(i);
 
-        if (order == ByteOrder.BIG_ENDIAN) {
+        if (order.equals(ByteOrder.BIG_ENDIAN)) {
             return Arrays.copyOfRange(bb.array(), 2, 8);
         }
 
-        if (order == ByteOrder.LITTLE_ENDIAN) {
+        if (order.equals(ByteOrder.LITTLE_ENDIAN)) {
             return Arrays.copyOfRange(bb.array(), 0, 6);
         }
 
