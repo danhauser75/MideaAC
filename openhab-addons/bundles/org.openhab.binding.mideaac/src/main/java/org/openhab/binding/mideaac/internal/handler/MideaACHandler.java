@@ -197,7 +197,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         }
 
         if (getLastResponse() == null) {
-            markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR, "Device not responding with its status.");
+            markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR,
+                    "Device not responding with its status. Last response was null");
             return;
         }
 
@@ -861,7 +862,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                                     "Invalid Key. Correct Key in configuration.");
                         }
-                    } else if (new String("ERROR").getBytes().equals(response)) {
+                    } else if ("ERROR".getBytes().equals(response)) {
                         logger.warn("Authentication failed!");
                     } else {
                         logger.warn("Authentication reponse unexpected data length ({} instead of 72)!",
@@ -965,7 +966,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                     return;
                 } else {
                     markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR,
-                            "Device not responding with its status.");
+                            "Device not responding with its status.Response bytes is null.");
                 }
 
             } catch (SocketException e) {
@@ -1033,7 +1034,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             updateChannel(CHANNEL_IMODE_RESUME, response.getImmodeResume() == true ? OnOffType.ON : OnOffType.OFF);
             updateChannel(CHANNEL_TIMER_MODE, response.getTimerMode() == true ? OnOffType.ON : OnOffType.OFF);
             updateChannel(CHANNEL_APPLIANCE_ERROR, response.getApplianceError() == true ? OnOffType.ON : OnOffType.OFF);
-            updateChannel(CHANNEL_TARGET_TEMPERATURE, new QuantityType<Temperature>(response.getTargetTemperature(),
+            updateChannel(CHANNEL_TARGET_TEMPERATURE, new QuantityType<>(response.getTargetTemperature(),
                     response.getTempUnit() == true ? ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS)); // new
                                                                                                    // DecimalType(response.getTargetTemperature()));
             updateChannel(CHANNEL_OPERATIONAL_MODE, new StringType(response.getOperationalMode().toString()));
@@ -1078,7 +1079,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             // QuantityType<Temperature>(response.getOutdoorTemperature(), response.getTempUnit() == true ?
             // ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS)); // new
             // DecimalType(response.getOutdoorTemperature()));
-            updateChannel(CHANNEL_OUTDOOR_TEMPERATURE, new QuantityType<Temperature>(cot,
+            updateChannel(CHANNEL_OUTDOOR_TEMPERATURE, new QuantityType<>(cot,
                     response.getTempUnit() == true ? ImperialUnits.FAHRENHEIT : SIUnits.CELSIUS));
             updateChannel(CHANNEL_HUMIDITY, new DecimalType(response.getHumidity()));
         }

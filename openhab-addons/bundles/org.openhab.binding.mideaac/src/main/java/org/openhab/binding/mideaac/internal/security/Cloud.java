@@ -265,7 +265,7 @@ public class Cloud {
 
     // Get tokenlist with udpid
     public TokenKey getToken(String udpid) {
-        long i = Long.valueOf(udpid);
+        long i = Long.parseLong(udpid);
 
         // if (!StringUtils.isBlank(cloudProvider.getProxied())) {
         JsonObject args = new JsonObject();
