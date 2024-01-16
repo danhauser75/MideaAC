@@ -124,6 +124,18 @@
 				<description>Connecting timeout. Minimum time is 1 second, maximum 10 seconds (4 seconds default).</description>
 				<default>4</default>
 			</parameter>
+			<parameter name="connectionRetry" type="decimal" required="true" min="1" max="5" unit="s">
+				<context>connectionRetry</context>
+				<label>Connection retry</label>
+				<description>A number of retries in case of TCP timeout.</description>
+				<default>1</default>
+			</parameter>
+			<parameter name="readSocketTimeout" type="decimal" required="true" min="1000" max="30000" unit="s">
+				<context>readSocketTimeout</context>
+				<label>Socket read timeout value</label>
+				<description>Timeout in milliseconds while reading from socket</description>
+				<default>5000</default>
+			</parameter>
 			<parameter name="promptTone" type="boolean" required="true">
 				<context>promptTone</context>
 				<label>Prompt tone</label>

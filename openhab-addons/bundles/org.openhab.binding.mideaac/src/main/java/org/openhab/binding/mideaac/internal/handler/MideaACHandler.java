@@ -102,6 +102,31 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
     }
 
     private String ipAddress = null;
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public String getIpPort() {
+        return ipPort;
+    }
+
+    public void setIpPort(String ipPort) {
+        this.ipPort = ipPort;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
     private String ipPort = null;
     private String deviceId = null;
     private int version = 0;
@@ -519,14 +544,14 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             logger.debug("Configuration valid for {}", thing.getUID());
         }
 
-        ipAddress = getConfiguration().getIpAddress();
-        ipPort = getConfiguration().getIpPort();
-        deviceId = getConfiguration().getDeviceId();
+        setIpAddress(getConfiguration().getIpAddress());
+        setIpPort(getConfiguration().getIpPort());
+        setDeviceId(getConfiguration().getDeviceId());
         version = Integer.parseInt(getProperties().get(PROPERTY_VERSION).toString());
 
-        logger.debug("IPAddress: {}", ipAddress);
-        logger.debug("IPPort: {}", ipPort);
-        logger.debug("ID: {}", deviceId);
+        logger.debug("IPAddress: {}", getIpAddress());
+        logger.debug("IPPort: {}", getIpPort());
+        logger.debug("ID: {}", getDeviceId());
         logger.debug("Version: {}", version);
 
         updateStatus(ThingStatus.UNKNOWN);
@@ -580,6 +605,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 || (isOffline() && !statusMessage.equals(getDescription())) || !isOffline()) {
             logger.debug("Changing status of {} from {}({}) to OFFLINE({})", thing.getUID(), getStatus(), getDetail(),
                     statusDetail);
+            logger.info("Changing status of {} from {}({}) to OFFLINE({})", thing.getUID(), getStatus(), getDetail(),
+                    statusDetail);
             if (isOffline()) {
                 updateStatus(ThingStatus.UNKNOWN);
             }
@@ -590,7 +617,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
             updateStatus(ThingStatus.OFFLINE, statusDetail, statusMessage);
             // logger.debug(Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
-            return;
+            // return;
         }
     }
 
@@ -636,6 +663,23 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
         // private @Nullable InetAddress ifAddress;
         private @Nullable Socket socket;
+
+        public Socket getSocket() {
+            return socket;
+        }
+
+        public void setSocket(Socket socket) {
+            this.socket = socket;
+        }
+
+        public DataOutputStream getWriter() {
+            return writer;
+        }
+
+        public void setWriter(DataOutputStream writer) {
+            this.writer = writer;
+        }
+
         private @Nullable InputStream inputStream;
         private @Nullable DataOutputStream writer;
         // private final int SOCKET_CONNECT_TIMEOUT = 4000;
@@ -653,7 +697,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         }
 
         Runnable connectionMonitorRunnable = () -> {
-            logger.trace("Performing connection check for {} at IP {}", thing.getUID(), ipAddress);
+            logger.trace("Performing connection check for {} at IP {}", thing.getUID(), getIpAddress());
             checkConnection();
         };
 
@@ -697,22 +741,34 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             if (isConnected()) {
                 return;
             }
-            logger.trace("Connecting to {} at {}:{}", thing.getUID(), ipAddress, ipPort);
+            logger.trace("Connecting to {} at {}:{}", thing.getUID(), getIpAddress(), getIpPort());
 
             // Open socket
             try {
-                socket = new Socket();
-                socket.setSoTimeout(getConfiguration().getTimeout() * 1000);
+                setSocket(new Socket());
+                getSocket().setSoTimeout(getConfiguration().getTimeout() * 1000);
+                int connectionRetry = getConfiguration().getConnectionRetry();
+                int numberOfRetries = 0;
+                boolean connected = false;
                 // socket.setReuseAddress(true);
                 // socket.bind(new InetSocketAddress(0)); // TODO: allow choosing adapter? // new InetSocketAddress(0)
                 // socket.setReuseAddress(true);
-                if (ipPort != null) {
-                    socket.connect(new InetSocketAddress(ipAddress, Integer.valueOf(ipPort)),
-                            getConfiguration().getTimeout() * 1000);
+                if (getIpPort() != null) {
+                    while (!connected || numberOfRetries <= connectionRetry) {
+                        try {
+                            getSocket().connect(new InetSocketAddress(getIpAddress(), Integer.valueOf(getIpPort())),
+                                    getConfiguration().getTimeout() * 1000);
+                            connected = true;
+                        } catch (IOException | NumberFormatException te) {
+                            numberOfRetries++;
+                            logger.info("Socket connection exception {}. Try reconnection {} time(s)", te.getMessage(),
+                                    numberOfRetries);
+                        }
+                    }
                 }
             } catch (IOException e) {
-                logger.debug("IOException connecting to  {} at {}: {}", thing.getUID(), ipAddress, e.getMessage());
-                String message = e.getMessage();
+                logger.debug("IOException connecting to  {} at {}: {}", thing.getUID(), getIpAddress(), e.getMessage());
+                String message = ">>>" + e.getMessage();
                 if (message != null) {
                     markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
                 } else {
@@ -725,12 +781,12 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
             // Create streams
             try {
-                writer = new DataOutputStream(socket.getOutputStream());
-                inputStream = socket.getInputStream();
+                setWriter(new DataOutputStream(getSocket().getOutputStream()));
+                setInputStream(getSocket().getInputStream());
             } catch (IOException e) {
-                logger.warn("IOException getting streams for {} at {}: {}", thing.getUID(), ipAddress, e.getMessage(),
-                        e);
-                String message = e.getMessage();
+                logger.warn("IOException getting streams for {} at {}: {}", thing.getUID(), getIpAddress(),
+                        e.getMessage(), e);
+                String message = "!!!" + e.getMessage();
                 if (message != null) {
                     markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
                 } else {
@@ -739,16 +795,25 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 disconnect();
                 return;
             }
-            logger.info("Connected to {} at {}", thing.getUID(), ipAddress);
+            logger.info("Connected to {} at {}", thing.getUID(), getIpAddress());
             deviceIsConnected = true;
             markOnline();
             if (getVersion() != 3) {
-                logger.debug("Device {}@{} not require authentication, getting status", thing.getUID(), ipAddress);
+                logger.debug("Device {}@{} not require authentication, getting status", thing.getUID(), getIpAddress());
                 requestStatus(true);
             } else {
-                logger.debug("Device {}@{} require authentication, going to authenticate", thing.getUID(), ipAddress);
+                logger.debug("Device {}@{} require authentication, going to authenticate", thing.getUID(),
+                        getIpAddress());
                 authenticate();
             }
+        }
+
+        public InputStream getInputStream() {
+            return inputStream;
+        }
+
+        public void setInputStream(InputStream inputStream) {
+            this.inputStream = inputStream;
         }
 
         public void authenticate() {
@@ -759,7 +824,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             if (getVersion() == 3) {
                 if (StringUtils.isBlank(getConfiguration().getToken()) == false
                         && StringUtils.isBlank(getConfiguration().getKey()) == false) {
-                    logger.debug("Device {}@{} authenticating", thing.getUID(), ipAddress);
+                    logger.debug("Device {}@{} authenticating", thing.getUID(), getIpAddress());
                     doAuthentication();
                 } else {
                     if (StringUtils.isBlank(getConfiguration().getToken())
@@ -769,13 +834,13 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                             updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                                     "Token and Key missing in configuration.");
                             logger.warn("Device {}@{} cannot authenticate, token and key missing", thing.getUID(),
-                                    ipAddress);
+                                    getIpAddress());
                         } else {
                             if (StringUtils.isBlank(getConfiguration().getCloud())) {
                                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                                         "Cloud Provider missing in configuration.");
                                 logger.warn("Device {}@{} cannot authenticate, Cloud Provider missing", thing.getUID(),
-                                        ipAddress);
+                                        getIpAddress());
                             } else {
                                 updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_PENDING,
                                         "Retrieving Token and Key from cloud.");
@@ -788,16 +853,16 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                     } else if (StringUtils.isBlank(getConfiguration().getToken())) {
                         updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                                 "Token missing in configuration.");
-                        logger.warn("Device {}@{} cannot authenticate, token missing", thing.getUID(), ipAddress);
+                        logger.warn("Device {}@{} cannot authenticate, token missing", thing.getUID(), getIpAddress());
                     } else if (StringUtils.isBlank(getConfiguration().getKey())) {
                         updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.CONFIGURATION_ERROR,
                                 "Key missing in configuration.");
-                        logger.warn("Device {}@{} cannot authenticate, key missing", thing.getUID(), ipAddress);
+                        logger.warn("Device {}@{} cannot authenticate, key missing", thing.getUID(), getIpAddress());
                     }
                 }
             } else {
                 logger.warn("Device {}@{} with version {} does not require authentication, not going to authenticate",
-                        thing.getUID(), ipAddress, getVersion());
+                        thing.getUID(), getIpAddress(), getVersion());
             }
         }
 
@@ -833,14 +898,14 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             byte[] request = mideaACHandler.getSecurity().encode_8370(
                     Utils.hexStringToByteArray(getConfiguration().getToken()), MsgType.MSGTYPE_HANDSHAKE_REQUEST);
             try {
-                logger.trace("Device {}@{} writing handshake_request: {}", thing.getUID(), ipAddress,
+                logger.trace("Device {}@{} writing handshake_request: {}", thing.getUID(), getIpAddress(),
                         Utils.bytesToHex(request));
                 write(request);
                 byte[] response = read();
-                logger.trace("Device {}@{} response for handshake_request length: {}", thing.getUID(), ipAddress,
+                logger.trace("Device {}@{} response for handshake_request length: {}", thing.getUID(), getIpAddress(),
                         response.length);
                 if (response != null && response.length > 0) {
-                    logger.trace("Device {}@{} response for handshake_request: {}", thing.getUID(), ipAddress,
+                    logger.trace("Device {}@{} response for handshake_request: {}", thing.getUID(), getIpAddress(),
                             Utils.bytesToHex(response));
                     if (response.length == 72) {
                         // boolean success = Security.tcp_key(Arrays.copyOfRange(response, 8, 72),
@@ -897,7 +962,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             if (command instanceof CommandSet) {
                 ((CommandSet) command).setPromptTone(getConfiguration().getPromptTone());
             }
-            Packet packet = new Packet(command, deviceId, mideaACHandler);
+            Packet packet = new Packet(command, getDeviceId(), mideaACHandler);
             packet.finalize();
 
             if (!isConnected()) {
@@ -912,8 +977,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
             try {
                 byte[] bytes = packet.getBytes();
-                logger.debug("Writing to {} at {} bytes.length: {}, bytes: {}", thing.getUID(), ipAddress, bytes.length,
-                        Utils.bytesToHex(bytes));
+                logger.debug("Writing to {} at {} bytes.length: {}, bytes: {}", thing.getUID(), getIpAddress(),
+                        bytes.length, Utils.bytesToHex(bytes));
 
                 if (getVersion() == 3) {
                     bytes = mideaACHandler.getSecurity().encode_8370(bytes, MsgType.MSGTYPE_ENCRYPTED_REQUEST);
@@ -965,13 +1030,14 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                     }
                     return;
                 } else {
-                    markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR,
-                            "Device not responding with its status.Response bytes is null.");
+                    // markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR,"Device not responding with its
+                    // status.Response bytes is null.");
                 }
 
             } catch (SocketException e) {
-                logger.debug("SocketException writing to  {} at {}: {}", thing.getUID(), ipAddress, e.getMessage());
-                String message = e.getMessage();
+                logger.debug("SocketException writing to  {} at {}: {}", thing.getUID(), getIpAddress(),
+                        e.getMessage());
+                String message = "ZZZ" + e.getMessage();
                 if (message != null) {
                     markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
                 } else {
@@ -979,8 +1045,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 }
                 disconnect();
             } catch (IOException e) {
-                logger.debug("IOException writing to  {} at {}: {}", thing.getUID(), ipAddress, e.getMessage());
-                String message = e.getMessage();
+                logger.debug("IOException writing to  {} at {}: {}", thing.getUID(), getIpAddress(), e.getMessage());
+                String message = "UUU" + e.getMessage();
                 if (message != null) {
                     markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
                 } else {
@@ -995,26 +1061,26 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             if (!isConnected()) {
                 return;
             }
-            logger.debug("Disconnecting from {} at {}", thing.getUID(), ipAddress);
+            logger.debug("Disconnecting from {} at {}", thing.getUID(), getIpAddress());
 
             try {
-                if (writer != null) {
-                    writer.close();
+                if (getWriter() != null) {
+                    getWriter().close();
                 }
-                if (inputStream != null) {
-                    inputStream.close();
+                if (getInputStream() != null) {
+                    getInputStream().close();
                 }
-                if (socket != null) {
-                    socket.close();
+                if (getSocket() != null) {
+                    getSocket().close();
                 }
             } catch (IOException e) {
-                logger.warn("IOException closing connection to {} at {}: {}", thing.getUID(), ipAddress, e.getMessage(),
-                        e);
+                logger.warn("IOException closing connection to {} at {}: {}", thing.getUID(), getIpAddress(),
+                        e.getMessage(), e);
             }
             deviceIsConnected = false;
-            socket = null;
-            inputStream = null;
-            writer = null;
+            setSocket(null);
+            setInputStream(null);
+            setWriter(null);
             markOffline();
         }
 
@@ -1087,8 +1153,10 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         public byte @Nullable [] read() {
             byte[] bytes = new byte[512];
             try {
-                if (inputStream != null) {
-                    int len = inputStream.read(bytes);
+                if (getInputStream() != null) {
+                    // int len = getInputStream().read(bytes);
+                    int len = readInputStreamWithTimeout(getInputStream(), bytes,
+                            getConfiguration().getReadSocketTimeout());
                     if (len > 0) {
                         logger.debug("Response received length: {}", len);
                         bytes = Arrays.copyOfRange(bytes, 0, len);
@@ -1098,7 +1166,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 }
             } catch (IOException e) {
                 disconnect();
-                String message = e.getMessage();
+                String message = "RRR" + e.getMessage();
                 if (message != null) {
                     markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
                 } else {
@@ -1109,16 +1177,31 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             return null;
         }
 
+        public int readInputStreamWithTimeout(InputStream is, byte[] b, int timeoutMillis) throws IOException {
+            int bufferOffset = 0;
+            long maxTimeMillis = System.currentTimeMillis() + timeoutMillis;
+            while (System.currentTimeMillis() < maxTimeMillis && bufferOffset < b.length) {
+                int readLength = java.lang.Math.min(is.available(), b.length - bufferOffset);
+                // can alternatively use bufferedReader, guarded by isReady():
+                int readResult = is.read(b, bufferOffset, readLength);
+                if (readResult == -1) {
+                    break;
+                }
+                bufferOffset += readResult;
+            }
+            return bufferOffset;
+        }
+
         public void write(byte[] buffer) throws IOException {
-            if (writer == null) {
-                logger.warn("fanWriter for {} is null when trying to write to {}!!!", thing.getUID(), ipAddress);
+            if (getWriter() == null) {
+                logger.warn("fanWriter for {} is null when trying to write to {}!!!", thing.getUID(), getIpAddress());
                 return;
             }
-            writer.write(buffer, 0, buffer.length);
+            getWriter().write(buffer, 0, buffer.length);
         }
 
         private boolean isConnected() {
-            return deviceIsConnected && !socket.isClosed() && socket.isConnected();
+            return deviceIsConnected && !getSocket().isClosed() && getSocket().isConnected();
         }
 
         /*
@@ -1127,7 +1210,7 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         private void scheduleConnectionMonitorJob() {
             if (connectionMonitorJob == null) {
                 logger.debug("Starting connection monitor job in {} seconds for {} at {}",
-                        getConfiguration().getPollingTime(), thing.getUID(), ipAddress);
+                        getConfiguration().getPollingTime(), thing.getUID(), getIpAddress());
                 connectionMonitorJob = scheduler.scheduleWithFixedDelay(connectionMonitorRunnable,
                         CONNECTION_MONITOR_DELAY, CONNECTION_MONITOR_FREQ, TimeUnit.SECONDS);
             }
@@ -1135,22 +1218,22 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
         private void cancelConnectionMonitorJob() {
             if (connectionMonitorJob != null) {
-                logger.debug("Cancelling connection monitor job for {} at {}", thing.getUID(), ipAddress);
+                logger.debug("Cancelling connection monitor job for {} at {}", thing.getUID(), getIpAddress());
                 connectionMonitorJob.cancel(true);
                 connectionMonitorJob = null;
             }
         }
 
         private void checkConnection() {
-            logger.trace("Checking status of connection for {} at {}", thing.getUID(), ipAddress);
+            logger.trace("Checking status of connection for {} at {}", thing.getUID(), getIpAddress());
             if (!isConnected()) {
-                logger.debug("Connection check FAILED for {} at {}", thing.getUID(), ipAddress);
+                logger.debug("Connection check FAILED for {} at {}", thing.getUID(), getIpAddress());
                 if (getVersion() == 2 || getVersion() == 3 && connectionIsAuthenticated == true) {
                     connect();
                 }
             } else {
-                logger.debug("Connection check OK for {} at {}", thing.getUID(), ipAddress);
-                logger.debug("Requesting status update from {} at {}", thing.getUID(), ipAddress);
+                logger.debug("Connection check OK for {} at {}", thing.getUID(), getIpAddress());
+                logger.debug("Requesting status update from {} at {}", thing.getUID(), getIpAddress());
                 requestStatus(false);
             }
         }

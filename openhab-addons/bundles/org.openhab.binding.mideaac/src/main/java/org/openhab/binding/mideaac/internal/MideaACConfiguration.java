@@ -133,6 +133,25 @@ public class MideaACConfiguration {
         this.timeout = timeout;
     }
 
+    private int connectionRetry;
+    private int readSocketTimeout;
+
+    public int getReadSocketTimeout() {
+        return readSocketTimeout;
+    }
+
+    public void setReadSocketTimeout(int socketTimeout) {
+        this.readSocketTimeout = socketTimeout;
+    }
+
+    public int getConnectionRetry() {
+        return connectionRetry;
+    }
+
+    public void setConnectionRetry(int connectionRetry) {
+        this.connectionRetry = connectionRetry;
+    }
+
     private boolean promptTone;
 
     public boolean getPromptTone() {
