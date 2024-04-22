@@ -77,7 +77,6 @@ public class CommandBase {
         }
 
         public static SwingMode fromId(int id) {
-            logger.error("SSWING id {}", id);
             for (SwingMode type : values()) {
                 if (type.getId() == id) {
                     return type;

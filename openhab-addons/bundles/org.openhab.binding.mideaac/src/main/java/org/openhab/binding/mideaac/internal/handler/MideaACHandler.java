@@ -556,7 +556,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
 
         updateStatus(ThingStatus.UNKNOWN);
 
-        connectionManager.connect();
+        // connectionManager.connect();
+        getConnectionManager().connect();
     }
 
     @Override
@@ -596,7 +597,9 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             logger.debug("Changing status of {} from {}({}) to OFFLINE", thing.getUID(), getStatus(), getDetail());
             updateStatus(ThingStatus.OFFLINE);
             // logger.debug(Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
+            // wait 3 seconds then reconnects
         }
+        getConnectionManager().connect();
     }
 
     private void markOfflineWithMessage(ThingStatusDetail statusDetail, String statusMessage) {
@@ -614,11 +617,9 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 Thread.sleep(250);
             } catch (InterruptedException e) {
             }
-
             updateStatus(ThingStatus.OFFLINE, statusDetail, statusMessage);
-            // logger.debug(Arrays.toString(Thread.currentThread().getStackTrace()).replace(',', '\n'));
-            // return;
         }
+        getConnectionManager().connect();
     }
 
     private boolean isOnline() {
@@ -770,9 +771,10 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 logger.debug("IOException connecting to  {} at {}: {}", thing.getUID(), getIpAddress(), e.getMessage());
                 String message = ">>>" + e.getMessage();
                 if (message != null) {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            message + " [connect IOException] ");
                 } else {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, "");
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, " [connect IOException] ");
                 }
                 disconnect();
                 scheduleConnectionMonitorJob();
@@ -788,9 +790,11 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                         e.getMessage(), e);
                 String message = "!!!" + e.getMessage();
                 if (message != null) {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            message + " [connect create streams IOException]");
                 } else {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, "");
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            " [connect create streams IOException]");
                 }
                 disconnect();
                 return;
@@ -968,7 +972,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             if (!isConnected()) {
                 logger.debug("Unable to send message; no connection to {}. Trying to reconnect: {}", thing.getUID(),
                         command);
-                connect();
+                // connect();
+                getConnectionManager().connect();
                 if (isConnected()) {
                     sendCommand(command);
                     return;
@@ -1030,31 +1035,35 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                     }
                     return;
                 } else {
-                    // markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR,"Device not responding with its
-                    // status.Response bytes is null.");
+                    markOfflineWithMessage(ThingStatusDetail.COMMUNICATION_ERROR,
+                            "Device not responding with its status.Response bytes is null.");
                 }
 
             } catch (SocketException e) {
                 logger.debug("SocketException writing to  {} at {}: {}", thing.getUID(), getIpAddress(),
                         e.getMessage());
-                String message = "ZZZ" + e.getMessage();
+                String message = e.getMessage();
                 if (message != null) {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            message + " [sendCommand SocketException]");
                 } else {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, "");
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            " [sendCommand SocketException]");
                 }
                 disconnect();
             } catch (IOException e) {
                 logger.debug("IOException writing to  {} at {}: {}", thing.getUID(), getIpAddress(), e.getMessage());
-                String message = "UUU" + e.getMessage();
+                String message = e.getMessage();
                 if (message != null) {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            message + " [sendCommand IOException]");
                 } else {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, "");
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, " [sendCommand IOException]");
                 }
                 disconnect();
             }
             scheduleConnectionMonitorJob();
+            // ZZZ
         }
 
         protected synchronized void disconnect() {
@@ -1095,6 +1104,9 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
         }
 
         private void processMessage(Response response) {
+            if (response == null) {
+                return;
+            }
 
             updateChannel(CHANNEL_POWER, response.getPowerState() == true ? OnOffType.ON : OnOffType.OFF);
             updateChannel(CHANNEL_IMODE_RESUME, response.getImmodeResume() == true ? OnOffType.ON : OnOffType.OFF);
@@ -1166,11 +1178,12 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
                 }
             } catch (IOException e) {
                 disconnect();
-                String message = "RRR" + e.getMessage();
+                String message = e.getMessage();
                 if (message != null) {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, message);
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR,
+                            message + " [read IOException]");
                 } else {
-                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, "");
+                    markOfflineWithMessage(ThingStatusDetail.OFFLINE.COMMUNICATION_ERROR, " [read IOException]");
                 }
             }
 
@@ -1229,7 +1242,8 @@ public class MideaACHandler extends BaseThingHandler implements DiscoveryHandler
             if (!isConnected()) {
                 logger.debug("Connection check FAILED for {} at {}", thing.getUID(), getIpAddress());
                 if (getVersion() == 2 || getVersion() == 3 && connectionIsAuthenticated == true) {
-                    connect();
+                    // connect();
+                    getConnectionManager().connect();
                 }
             } else {
                 logger.debug("Connection check OK for {} at {}", thing.getUID(), getIpAddress());
